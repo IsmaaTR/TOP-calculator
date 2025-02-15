@@ -41,71 +41,81 @@ function handleButtonClick(button) {
     const result = document.getElementById('result');
     const operation = document.getElementById('operation');
     if (!isNaN(button)) {
-        result.innerText == 0 ? result.innerText = button : result.innerText += button;
+        handleNumberInput(button, result);
     } else {
-        switch(button) {
-            case 'AC':
-                result.innerText = '0';
-                break;
-            case '+/-':
-                result.innerText = "-" + result.innerText;
-                break;
-            case '%':
-                result.innerText = Number(result.innerText) / 100;
-                break;
-            case '.':
-                if (Number.isInteger(Number(result.innerText)))
-                    result.innerText += ".";
-                break;
-            case '+':
-                if (lastOperation === '') {
-                    firsOperand = Number(result.innerText);
-                } else {
-                    firsOperand = operate(firsOperand, Number(result.innerText), lastOperation);
-                }
-                lastOperation = '+';
-                operation.innerText = firsOperand + " +";
-                result.innerText = '0';
-                break;
-            case '-':
-                if (lastOperation === '') {
-                    firsOperand = Number(result.innerText);
-                } else {
-                    firsOperand = operate(firsOperand, Number(result.innerText), lastOperation);
-                }
-                lastOperation = '-';
-                operation.innerText = firsOperand + " -";
-                result.innerText = '0';
-                break;
-            case 'x':
-                if (lastOperation === '') {
-                    firsOperand = Number(result.innerText);
-                } else {
-                    firsOperand = operate(firsOperand, Number(result.innerText), lastOperation);
-                }
-                lastOperation = 'x';
-                operation.innerText = firsOperand + " x";
-                result.innerText = '0';
-                break;
-            case '/':
-                if (lastOperation === '') {
-                    firsOperand = Number(result.innerText);
-                } else {
-                    firsOperand = operate(firsOperand, Number(result.innerText), lastOperation);
-                }
-                lastOperation = '/';
-                operation.innerText = firsOperand + " /";
-                result.innerText = '0';
-                break;
-            case '=':
-                result.innerText = operate(firsOperand, Number(result.innerText), lastOperation);
-                firsOperand = 0;
-                lastOperation = '';
-                operation.innerText = '';
-                break;
-            default:
-                break;
-        }
+        handleOperationInput(button, result, operation);
+    }
+}
+
+function handleNumberInput(button, result) {
+    result.innerText == 0 ? result.innerText = button : result.innerText += button;
+}
+
+function handleOperationInput(button, result, operation) {
+    switch(button) {
+        case 'AC':
+            clearResult(result, operation);
+            break;
+        case '+/-':
+            negateResult(result);
+            break;
+        case '%':
+            percentResult(result);
+            break;
+        case '.':
+            addDecimal(result);
+            break;
+        case '+':
+        case '-':
+        case 'x':
+        case '/':
+            setOperation(button, result, operation);
+            break;
+        case '=':
+            calculateResult(result, operation);
+            break;
+        default:
+            break;
+    }
+}
+
+function clearResult(result, operation) {
+    result.innerText = '0';
+    operation.innerText = '';
+    firsOperand = 0;
+    lastOperation = '';
+}
+
+function negateResult(result) {
+    result.innerText = "-" + result.innerText;
+}
+
+function percentResult(result) {
+    result.innerText = Number(result.innerText) / 100;
+}
+
+function addDecimal(result) {
+    if (Number.isInteger(Number(result.innerText)) && result.innerText[result.innerText.length - 1] !== '.')
+        result.innerText += ".";
+}
+
+function setOperation(button, result, operation) {
+    if (lastOperation === '') {
+        firsOperand = Number(result.innerText);
+    } else {
+        firsOperand = operate(firsOperand, Number(result.innerText), lastOperation);
+    }
+    lastOperation = button;
+    operation.innerText = firsOperand + " " + button;
+    result.innerText = '0';
+}
+
+function calculateResult(result, operation) {
+    if (lastOperation !== '') {
+        result.innerText = operate(firsOperand, Number(result.innerText), lastOperation);
+        firsOperand = 0;
+        lastOperation = '';
+        operation.innerText = '';
     }
 }
 
