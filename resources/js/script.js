@@ -1,7 +1,12 @@
+//Initialization constants
 const buttons = ['AC', '+/-', '%', '/', '7', '8', '9', 'x', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='];
 const buttonNames = ['clear', 'negate', 'percent', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'add', 'zero', 'decimal', 'equals'];
 const numRows = 5;
 const numCols = 4;
+
+//Saved operands
+let firsOperand = 0;
+let lastOperation = '';
 
 // Initialice the calculator
 initialiceCalc();
@@ -33,24 +38,89 @@ function initialiceCalc() {
 }
 
 function handleButtonClick(button) {
-    const display = document.getElementById('result');
+    const result = document.getElementById('result');
+    const operation = document.getElementById('operation');
     if (!isNaN(button)) {
-        display.innerText == 0 ? display.innerText = button : display.innerText += button;
+        result.innerText == 0 ? result.innerText = button : result.innerText += button;
     } else {
         switch(button) {
             case 'AC':
-                display.innerText = '0';
+                result.innerText = '0';
                 break;
             case '+/-':
-                display.innerText = "-" + display.innerText;
+                result.innerText = "-" + result.innerText;
                 break;
             case '%':
-                display.innerText = Number(display.innerText) / 100;
+                result.innerText = Number(result.innerText) / 100;
                 break;
             case '.':
-                display.innerText += ".";
+                if (Number.isInteger(Number(result.innerText)))
+                    result.innerText += ".";
+                break;
+            case '+':
+                if (lastOperation === '') {
+                    firsOperand = Number(result.innerText);
+                } else {
+                    firsOperand = operate(firsOperand, Number(result.innerText), lastOperation);
+                }
+                lastOperation = '+';
+                operation.innerText = firsOperand + " +";
+                result.innerText = '0';
+                break;
+            case '-':
+                if (lastOperation === '') {
+                    firsOperand = Number(result.innerText);
+                } else {
+                    firsOperand = operate(firsOperand, Number(result.innerText), lastOperation);
+                }
+                lastOperation = '-';
+                operation.innerText = firsOperand + " -";
+                result.innerText = '0';
+                break;
+            case 'x':
+                if (lastOperation === '') {
+                    firsOperand = Number(result.innerText);
+                } else {
+                    firsOperand = operate(firsOperand, Number(result.innerText), lastOperation);
+                }
+                lastOperation = 'x';
+                operation.innerText = firsOperand + " x";
+                result.innerText = '0';
+                break;
+            case '/':
+                if (lastOperation === '') {
+                    firsOperand = Number(result.innerText);
+                } else {
+                    firsOperand = operate(firsOperand, Number(result.innerText), lastOperation);
+                }
+                lastOperation = '/';
+                operation.innerText = firsOperand + " /";
+                result.innerText = '0';
+                break;
+            case '=':
+                result.innerText = operate(firsOperand, Number(result.innerText), lastOperation);
+                firsOperand = 0;
+                lastOperation = '';
+                operation.innerText = '';
+                break;
+            default:
                 break;
         }
+    }
+}
+
+function operate(a, b, operator) {
+    switch(operator) {
+        case '+':
+            return sum(a, b);
+        case '-':
+            return sub(a, b);
+        case 'x':
+            return mult(a, b);
+        case '/':
+            return div(a, b);
+        default:
+            return NaN;
     }
 }
 
@@ -61,8 +131,14 @@ function handleButtonClick(button) {
  * @returns the sum of a and b
  */
 function sum(a, b) {
-    const sum = a + b;
-    return Number.isInteger(sum) ? sum : sum.toFixed(4);
+    const sum = Number(a) + Number(b);
+    if (!Number.isInteger(sum)) {
+        const decimals = sum.toString().split(".")[1];
+        if (decimals.length > 4) {
+            return sum.toFixed(4);
+        }
+    }
+    return sum;
 }
 
 /**
@@ -72,8 +148,14 @@ function sum(a, b) {
  * @returns the difference of a and b
  */
 function sub(a, b) {
-    const sub = a - b;
-    return Number.isInteger(sub) ? sub : sub.toFixed(4);
+    const sub = Number(a) - Number(b);
+    if (!Number.isInteger(sub)) {
+        const decimals = sub.toString().split(".")[1];
+        if (decimals.length > 4) {
+            return sub.toFixed(4);
+        }
+    }
+    return sub;
 }
 
 /**
@@ -83,8 +165,14 @@ function sub(a, b) {
  * @returns The product of a and b
  */
 function mult(a, b) {
-    const mult = a * b;
-    return Number.isInteger(mult) ? mult : mult.toFixed(4);
+    const mult = Number(a) * Number(b);
+    if (!Number.isInteger(mult)) {
+        const decimals = mult.toString().split(".")[1];
+        if (decimals.length > 4) {
+            return mult.toFixed(4);
+        }
+    }
+    return mult;
 }
 
 /**
@@ -96,8 +184,14 @@ function mult(a, b) {
 function div(a, b) {
     // Check if b is 0
     if (b === 0)
-        return NaN;
+        return "Tf you doin?";
 
-    const div = a / b;
-    return Number.isInteger(div) ? div : div.toFixed(4);
+    const div = Number(a) / Number(b);
+    if (!Number.isInteger(div)) {
+        const decimals = div.toString().split(".")[1];
+        if (decimals.length > 4) {
+            return div.toFixed(4);
+        }
+    }
+    return div;
 }
