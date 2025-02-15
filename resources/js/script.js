@@ -1,3 +1,29 @@
+const buttons = ['AC', '+/-', '%', '/', '7', '8', '9', 'x', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='];
+const buttonNames = ['clear', 'negate', 'percent', 'divide', 'seven', 'eight', 'nine', 'multiply', 'four', 'five', 'six', 'subtract', 'one', 'two', 'three', 'add', 'zero', 'decimal', 'equals'];
+const numRows = 5;
+const numCols = 4;
+
+// Initialice the calculator
+initialiceCalc();
+
+function initialiceCalc() {
+    const bottonDiv = document.getElementById('buttons');
+    for (let i = 0; i < numRows; i++) {
+        const row = document.createElement('div');
+        row.classList.add('row');
+        for (let j = 0; j < numCols; j++) {
+            if (i*numCols + j < buttons.length) {
+                const button = document.createElement('button');
+                button.classList.add('button');
+                button.id = buttonNames[i * numCols + j];
+                button.innerText = buttons[i * numCols + j];
+                row.appendChild(button);
+            }
+        }
+        bottonDiv.appendChild(row);
+    }
+}
+
 /**
  * Add two numbers
  * @param {*} a 
