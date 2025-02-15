@@ -6,6 +6,9 @@ const numCols = 4;
 // Initialice the calculator
 initialiceCalc();
 
+/**
+ * Initialices the calculator
+ */
 function initialiceCalc() {
     const bottonDiv = document.getElementById('buttons');
     for (let i = 0; i < numRows; i++) {
@@ -17,10 +20,24 @@ function initialiceCalc() {
                 button.classList.add('button');
                 button.id = buttonNames[i * numCols + j];
                 button.innerText = buttons[i * numCols + j];
+                button.addEventListener('click', function() {
+                    handleButtonClick(button.innerText);
+                });
+                button.id !== 'equals' ? button.addEventListener('mouseover', () => button.style.color = 'orange') : button.addEventListener('mouseover', () => button.style.color = 'black');
+                button.addEventListener('mouseleave', () => button.style.color = 'white');
                 row.appendChild(button);
             }
         }
         bottonDiv.appendChild(row);
+    }
+}
+
+function handleButtonClick(button) {
+    const display = document.getElementById('result');
+    if (!isNaN(button)) {
+        display.innerText == 0 ? display.innerText = button : display.innerText += button;
+    } else {
+        // Handle other button clicks (e.g., operators, clear, etc.)
     }
 }
 
