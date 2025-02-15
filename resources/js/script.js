@@ -37,7 +37,20 @@ function handleButtonClick(button) {
     if (!isNaN(button)) {
         display.innerText == 0 ? display.innerText = button : display.innerText += button;
     } else {
-        // Handle other button clicks (e.g., operators, clear, etc.)
+        switch(button) {
+            case 'AC':
+                display.innerText = '0';
+                break;
+            case '+/-':
+                display.innerText = "-" + display.innerText;
+                break;
+            case '%':
+                display.innerText = Number(display.innerText) / 100;
+                break;
+            case '.':
+                display.innerText += ".";
+                break;
+        }
     }
 }
 
